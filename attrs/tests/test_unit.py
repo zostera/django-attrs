@@ -1,5 +1,4 @@
 # coding: utf-8
-from __future__ import unicode_literals
 
 
 from django.test import TestCase
@@ -11,5 +10,8 @@ class UnitTestCase(TestCase):
         """
         Test display of strange symbols in units
         """
-        unit_celsius = mommy.make("attrs.Unit", name="degrees Celsius", symbol="° C")
-        self.assertEqual("° C", unit_celsius.symbol)
+        celsius_symbol = "° C"
+        unit_celsius = mommy.make(
+            "attrs.Unit", name="degrees Celsius", symbol=celsius_symbol
+        )
+        self.assertEqual(celsius_symbol, unit_celsius.symbol)
