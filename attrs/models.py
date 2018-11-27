@@ -3,7 +3,14 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from attrs.fields import AttributeType, AttributeTypeField
+from attrs.fields import (
+    ATTRIBUTE_TYPE_BOOLEAN,
+    ATTRIBUTE_TYPE_DATE,
+    ATTRIBUTE_TYPE_FLOAT,
+    ATTRIBUTE_TYPE_INTEGER,
+    ATTRIBUTE_TYPE_TIME,
+    AttributeTypeField,
+)
 
 
 class Unit(models.Model):
@@ -64,7 +71,7 @@ class Attribute(models.Model):
         """
 
         # Standard choices for a boolean
-        if self.type == AttributeType.BOOLEAN:
+        if self.type == ATTRIBUTE_TYPE_BOOLEAN:
             return (
                 ("", str(_("unknown"))),
                 ("TRUE", str(_("yes"))),
@@ -126,15 +133,15 @@ class Attribute(models.Model):
         # Copy, convert to uppercase and strip spaces
         value = text.upper().strip()
         # Try all other valid types
-        if self.type == AttributeType.INTEGER:
+        if self.type == ATTRIBUTE_TYPE_INTEGER:
             return self.text_to_int(value)
-        if self.type == AttributeType.FLOAT:
+        if self.type == ATTRIBUTE_TYPE_FLOAT:
             return self.text_to_float(value)
-        if self.type == AttributeType.BOOLEAN:
+        if self.type == ATTRIBUTE_TYPE_BOOLEAN:
             return self.text_to_boolean(value)
-        if self.type == AttributeType.DATE:
+        if self.type == ATTRIBUTE_TYPE_DATE:
             return self.text_to_date(value)
-        if self.type == AttributeType.TIME:
+        if self.type == ATTRIBUTE_TYPE_TIME:
             return self.text_to_time(value)
         # We cannot parse this type, use original variable ``text`` for error
         raise ValueError(
@@ -190,5 +197,4 @@ def get_attributes(instance):
                 attrs[key] = None
     for attribute in Attribute.objects.filter(pk__in=attrs.keys()):
         result.append([attribute, attrs[attribute.key]])
-    print(result)
     return result

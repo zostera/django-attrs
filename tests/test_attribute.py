@@ -4,7 +4,14 @@
 from django.test import TestCase
 from model_mommy import mommy
 
-from attrs.fields import AttributeType
+from attrs.fields import (
+    ATTRIBUTE_TYPE_TEXT,
+    ATTRIBUTE_TYPE_INTEGER,
+    ATTRIBUTE_TYPE_FLOAT,
+    ATTRIBUTE_TYPE_DATE,
+    ATTRIBUTE_TYPE_TIME,
+    ATTRIBUTE_TYPE_BOOLEAN,
+)
 
 
 class AttributeTestCase(TestCase):
@@ -12,9 +19,9 @@ class AttributeTestCase(TestCase):
         """
         Test creation of all attribute types
         """
-        attr_text = mommy.make("attrs.Attribute", type=AttributeType.TEXT)
-        attr_int = mommy.make("attrs.Attribute", type=AttributeType.INTEGER)
-        attr_float = mommy.make("attrs.Attribute", type=AttributeType.FLOAT)
-        attr_date = mommy.make("attrs.Attribute", type=AttributeType.DATE)
-        attr_time = mommy.make("attrs.Attribute", type=AttributeType.TIME)
-        attr_bool = mommy.make("attrs.Attribute", type=AttributeType.BOOLEAN)
+        attr_text = mommy.make("attrs.Attribute", type=ATTRIBUTE_TYPE_TEXT)
+        attr_int = mommy.make("attrs.Attribute", type=ATTRIBUTE_TYPE_INTEGER)
+        attr_float = mommy.make("attrs.Attribute", type=ATTRIBUTE_TYPE_FLOAT)
+        attr_date = mommy.make("attrs.Attribute", type=ATTRIBUTE_TYPE_DATE)
+        attr_time = mommy.make("attrs.Attribute", type=ATTRIBUTE_TYPE_TIME)
+        attr_bool = mommy.make("attrs.Attribute", type=ATTRIBUTE_TYPE_BOOLEAN)

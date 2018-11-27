@@ -1,8 +1,14 @@
 from django import forms
 from django.utils.text import capfirst
+from django.utils.translation import gettext_lazy as _
 
-from attrs.fields import AttributeType
-from attrs.models import Attribute
+from attrs.fields import (
+    ATTRIBUTE_TYPE_DATE,
+    ATTRIBUTE_TYPE_FLOAT,
+    ATTRIBUTE_TYPE_INTEGER,
+    ATTRIBUTE_TYPE_TEXT,
+    ATTRIBUTE_TYPE_TIME,
+)
 from attrs.utils import get_attributes
 
 
@@ -24,7 +30,6 @@ def generate_attribute_field(attribute, value=""):
     """
     Generate a attribute field
     """
-
     choices = None
     # If we get choices, make a ChoiceField
     choices = attribute.get_choices()
@@ -34,16 +39,20 @@ def generate_attribute_field(attribute, value=""):
             required=False,
             initial=value.capitalize() if value else value,
         )
-    elif attribute.type == AttributeType.INTEGER:
+    elif attribute.type == ATTRIBUTE_TYPE_INTEGER:
         field = forms.IntegerField(required=False, initial=value)
-    elif attribute.type == AttributeType.FLOAT:
+    elif attribute.type == ATTRIBUTE_TYPE_FLOAT:
         field = RelaxedFloatField(required=False, initial=value)
-    elif attribute.type == AttributeType.DATE:
+    elif attribute.type == ATTRIBUTE_TYPE_DATE:
         field = forms.DateField(required=False, initial=value)
-    elif attribute.type == AttributeType.TIME:
+    elif attribute.type == ATTRIBUTE_TYPE_TIME:
         field = forms.TimeField(required=False, initial=value)
-    else:
+    elif attribute.type == ATTRIBUTE_TYPE_TEXT:
         field = forms.CharField(required=False, initial=value)
+    else:
+        raise NotImplementedError(
+            _("Attribute type {type} is unknown.").format(type=attribute.type)
+        )
     field.label = capfirst(attribute.label)
     return f"attr__{attribute.key}", field
 
