@@ -1,1 +1,4 @@
 model_mommy==1.6.0
+isort==4.3.4
+black==18.9b0
+flake8==3.6.0

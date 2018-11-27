@@ -8,7 +8,6 @@ from attrs.models import Attribute
 from attrs.utils import get_attributes
 from tests.app.models import Protocol
 
-
 # class ProtocolTestCase(TestCase):
 #     def test_attrs_field(self):
 #         """
