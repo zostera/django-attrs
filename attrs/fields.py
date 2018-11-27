@@ -17,7 +17,7 @@ class Choices(Enum):
 
     @classmethod
     def choices(cls):
-        return [(choice, choice.value) for choice in cls]
+        return [(choice.name, choice.value) for choice in cls]
 
 
 class AttributeType(Choices):
