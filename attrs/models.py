@@ -6,6 +6,8 @@ from django.utils.translation import gettext_lazy as _
 from attrs.fields import AttributeTypeField
 
 
+
+
 class Unit(models.Model):
     """
     A unit for a given attribute
@@ -23,26 +25,6 @@ class Attribute(models.Model):
     """
     An attribute for a model
     """
-
-    TYPE_TEXT = "text"
-    TYPE_BOOLEAN = "boolean"
-    TYPE_INTEGER = "integer"
-    TYPE_FLOAT = "float"
-    TYPE_DATE = "date"
-    TYPE_TIME = "time"
-
-    BOOLEAN_TRUE_TEXTS = ("TRUE", "YES", "T", "Y", "1")
-    BOOLEAN_FALSE_TEXTS = ("FALSE", "NO", "F", "N", "0")
-    BOOLEAN_NULL_TEXTS = ("NULL", "")
-
-    CHOICES_FOR_TYPE = (
-        (TYPE_TEXT, _("text")),
-        (TYPE_BOOLEAN, _("boolean")),
-        (TYPE_INTEGER, _("integer")),
-        (TYPE_FLOAT, _("float")),
-        (TYPE_DATE, _("date")),
-        (TYPE_TIME, _("time")),
-    )
 
     name = models.CharField(_("name"), max_length=100, db_index=True)
     type = AttributeTypeField(_("type"))

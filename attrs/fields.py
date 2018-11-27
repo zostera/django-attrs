@@ -3,6 +3,12 @@ from enum import Enum
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
+BOOLEAN_VALUES = {
+    "True": ("TRUE", "YES", "T", "Y", "1"),
+    "False": ("FALSE", "NO", "F", "N", "0"),
+    "None": ("NULL", ""),
+}
+
 
 class Choices(Enum):
     """
