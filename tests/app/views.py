@@ -34,7 +34,10 @@ class VisitCreateView(CreateView):
 
     def get_form_kwargs(self):
         form_kwargs = super().get_form_kwargs()
-        form_kwargs["protocol"] = self.get_protocol()
+        instance = form_kwargs["instance"] or Visit()
+        if not instance.protocol_id:
+            instance.protocol = self.get_protocol()
+            form_kwargs["instance"] = instance
         return form_kwargs
 
 
