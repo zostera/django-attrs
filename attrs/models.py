@@ -3,7 +3,7 @@ from django.db import models
 from django.utils.functional import cached_property
 from django.utils.translation import gettext_lazy as _
 
-from attrs.fields import AttributeTypeField
+from attrs.fields import AttributeType, AttributeTypeField
 
 
 class Unit(models.Model):
@@ -40,6 +40,10 @@ class Attribute(models.Model):
             label = "{label} ({symbol})".format(label=label, symbol=self.unit.symbol)
         return label
 
+    @cached_property
+    def key(self):
+        return "{}".format(self.pk)
+
     def get_value_display(self, value):
         # If there are choices, try to get the choice representation
         if self.choice_set.exists():
@@ -60,7 +64,7 @@ class Attribute(models.Model):
         """
 
         # Standard choices for a boolean
-        if self.type == self.TYPE_BOOLEAN:
+        if self.type == AttributeType.BOOLEAN:
             return (
                 ("", str(_("unknown"))),
                 ("TRUE", str(_("yes"))),
@@ -122,15 +126,15 @@ class Attribute(models.Model):
         # Copy, convert to uppercase and strip spaces
         value = text.upper().strip()
         # Try all other valid types
-        if self.type == self.TYPE_INTEGER:
+        if self.type == AttributeType.INTEGER:
             return self.text_to_int(value)
-        if self.type == self.TYPE_DECIMAL:
+        if self.type == AttributeType.FLOAT:
             return self.text_to_float(value)
-        if self.type == self.TYPE_BOOLEAN:
+        if self.type == AttributeType.BOOLEAN:
             return self.text_to_boolean(value)
-        if self.type == self.TYPE_DATE:
+        if self.type == AttributeType.DATE:
             return self.text_to_date(value)
-        if self.type == self.TYPE_TIME:
+        if self.type == AttributeType.TIME:
             return self.text_to_time(value)
         # We cannot parse this type, use original variable ``text`` for error
         raise ValueError(
@@ -166,3 +170,25 @@ class Choice(models.Model):
         :return:
         """
         return self.name if self.name else self.value
+
+
+def get_attributes(instance):
+    """
+    Get a list of [attribute, value=None] from a model instance
+    :param instance: model instance
+    :return: OrderedDict
+    """
+    result = []
+    try:
+        attrs = instance.attrs
+    except AttributeError:
+        attrs = {}
+    if hasattr(instance, "get_attributes"):
+        for attribute in instance.get_attributes():
+            key = attribute.key
+            if key not in attrs:
+                attrs[key] = None
+    for attribute in Attribute.objects.filter(pk__in=attrs.keys()):
+        result.append([attribute, attrs[attribute.key]])
+    print(result)
+    return result

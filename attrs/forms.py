@@ -1,7 +1,9 @@
-from django.forms import forms
+from django import forms
 from django.utils.text import capfirst
 
 from attrs.fields import AttributeType
+from attrs.models import Attribute
+from attrs.utils import get_attributes
 
 
 class RelaxedFloatField(forms.FloatField):
@@ -34,15 +36,43 @@ def generate_attribute_field(attribute, value=""):
         )
     elif attribute.type == AttributeType.INTEGER:
         field = forms.IntegerField(required=False, initial=value)
-    elif attribute.type == AttributeType.DECIMAL:
+    elif attribute.type == AttributeType.FLOAT:
         field = RelaxedFloatField(required=False, initial=value)
     elif attribute.type == AttributeType.DATE:
         field = forms.DateField(required=False, initial=value)
-        field.widget.attrs["data-datefield"] = True
     elif attribute.type == AttributeType.TIME:
         field = forms.TimeField(required=False, initial=value)
-        field.widget.attrs["data-timefield"] = True
     else:
         field = forms.CharField(required=False, initial=value)
     field.label = capfirst(attribute.label)
-    return field
+    return f"attr__{attribute.key}", field
+
+
+class AttrsMixin:
+    """
+    Mixin for forms to add attribute fields
+    """
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for attribute, value in self.get_attributes():
+            name, field = generate_attribute_field(attribute, value)
+            self.fields[name] = field
+            if value:
+                self.initial[name] = value
+
+    def get_attributes(self):
+        return get_attributes(self.instance)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        for key, value in self.cleaned_data.items():
+            try:
+                attr_id = int(key.replace("attr__", ""))
+            except ValueError:
+                pass
+            else:
+                self.instance.attrs[attr_id] = value
+        if commit:
+            instance.save()
+        return instance

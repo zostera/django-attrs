@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Protocol: {{ protocol }}{% endblock %}
+
+{% block content %}
+
+    <h1>{{ protocol }}</h1>
+
+    <ul>
+        {% for pa in protocol.protocolattribute_set.all %}
+            <li>{{ pa.attribute }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url "visit_create" pk=protocol.pk %}">Enter visit</a>
+    
+{% endblock %}

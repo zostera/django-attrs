@@ -3,6 +3,7 @@ from enum import Enum
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
+
 BOOLEAN_VALUES = {
     "True": ("TRUE", "YES", "T", "Y", "1"),
     "False": ("FALSE", "NO", "F", "N", "0"),
@@ -51,3 +52,8 @@ class AttrsField(JSONField):
     def __init__(self, *args, **kwargs):
         kwargs.update(default=dict, editable=False)
         super().__init__(*args, **kwargs)
+
+    def contribute_to_class(self, cls, name, private_only=False):
+        from .models import get_attributes
+        super().contribute_to_class(cls, name, private_only)
+        cls.attrs_as_list = get_attributes

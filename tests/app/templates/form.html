@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}django-attrs: form{% endblock %}
+
+{% block content %}
+
+    <h1>Form</h1>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <hr>
+        {{ form.as_p }}
+        <hr>
+        <input type="submit" value="Submit form">
+    </form>
+
+{% endblock %}

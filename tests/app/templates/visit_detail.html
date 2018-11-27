@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block title %}Visit: {{ visit }}{% endblock %}
+
+{% block content %}
+
+    <h1>{{ visit }}</h1>
+
+    {{ visit.name }}
+
+    <ul>
+        {% for attribute, value in visit.attrs_as_list %}
+            <li>{{ attribute }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url "visit_update" pk=visit.pk %}">Edit visit</a>
+
+{% endblock %}

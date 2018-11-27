@@ -10,7 +10,7 @@
 
     <ul>
         {% for protocol in protocols %}
-            <li>{{ protocol }}</li>
+            <li><a href="{% url "protocol_detail" pk=protocol.pk %}">{{ protocol }}</a></li>
         {% endfor %}
     </ul>
 
