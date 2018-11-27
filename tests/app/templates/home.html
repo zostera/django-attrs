@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}django-attrs{% endblock %}
+
+{% block content %}
+
+    <h1>django-attrs</h1>
+
+    <h2>Choose a protocol</h2>
+
+    <ul>
+        {% for protocol in protocols %}
+            <li>{{ protocol }}</li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

@@ -20,3 +20,11 @@ class ProtocolAttribute(models.Model):
 
     def __str__(self):
         return f"{self.protocol}.{self.attribute}"
+
+
+class Visit(models.Model):
+    name = models.CharField(max_length=100)
+    protocol = models.ForeignKey(Protocol, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
