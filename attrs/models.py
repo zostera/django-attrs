@@ -6,8 +6,6 @@ from django.utils.translation import gettext_lazy as _
 from attrs.fields import AttributeTypeField
 
 
-
-
 class Unit(models.Model):
     """
     A unit for a given attribute

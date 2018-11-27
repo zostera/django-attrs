@@ -7,8 +7,16 @@ from attrs.models import Attribute
 class Protocol(models.Model):
     name = models.CharField(max_length=100)
 
-    attrs = AttrsField()
+    def __str__(self):
+        return self.name
 
-    def get_attributes(self):
-        attribute, created = Attribute.objects.get_or_create(name="temperature")
-        return [attribute]
+
+class ProtocolAttribute(models.Model):
+    protocol = models.ForeignKey(Protocol, on_delete=models.CASCADE)
+    attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("protocol", "attribute")
+
+    def __str__(self):
+        return f"{self.protocol}.{self.attribute}"
